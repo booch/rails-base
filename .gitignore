@@ -1,0 +1,6 @@
+*~
+.DS_Store
+.quanta
+*.webprj
+*.session
+previous_failures.txt
