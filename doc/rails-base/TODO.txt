@@ -1,0 +1,163 @@
+Fix RSEL layout_path.
+	Move change to selenium-on-rails_hacks/.
+Deal w/ issues where developers need different database configs.
+	We can just use SQLite for development and test, and MySQL for staging and production.
+	MySQL needs socket on some systems, and port on others.
+	Make a rake task to configure.
+Add staging environment, and make staging and production use MySQL by default. (RAILS-BASE)
+Add staging environment.
+Make sure rake spec passes out of the box.
+Make sure rake test passes out of the box.
+Do better with log files in GIT.
+	Add to log/.gitignore:
+		!.gitignore
+		*
+	Apparently, we cannot ignore anything that's already in the index.
+		So we have to git rm all the log and tmp files.
+	Might want to create tmp and log dirs and files in init script, since they probably need special permissions.
+Changes to Selenium-on-Rails to make it more usable.
+	Passing regexps, symbols, and strings better.
+	Try to make it look more like RSpec tests.
+	My additions.
+	Loading of (generic and app-sepcific) helper files.
+Add a branch that includes Streamlined.
+Add a branch that includes my Streamlined knock-off: standard_crud.
+	class Controller
+	  standard_crud :model => Person, :items_per_page => 10
+      def edit
+	    standard_crud_edit # Actually, this is the default, but it can be extended.
+	  end
+	end
+Allow views to add their own CSS and JavaScript files.
+	Use a technique like content_for.
+		http://errtheblog.com/posts/26-content-for-whom
+	In layout:
+		<%= yield :extra_stylesheets %>
+		<%= yield :extra_javascript %>
+	In view:
+		<% add_stylesheet 'my_styles' %>
+		<% add_stylesheet 'more_styles' %>
+		<% add_javascript 'my_javascript' %>
+		<% add_stylesheet 'custom_javascript_for_this_page' %>
+	Definitions:
+		def add_stylesheet(name); content_for :extra_stylesheets, stylesheet_include_tag(name); end
+		def add_javascript(name); content_for :extra_javascript, javascript_include_tag(name); end
+
+
+Requirements
+============
+Rails 2.0. (PROBABLY)
+RubyGems. (PROBABLY)
+Rake. (PROBABLY)
+MySQL gem. (PROBABLY)
+SQLite gem. (MAYME)
+HAML. (OPTIONAL)
+	gem install haml
+
+
+
+Documentation
+=============
+Create doc/rails-base directory for documentation specific to rails-base.
+	doc/rails-base/README.txt - how to use rails-base
+	doc/rails-base/TODO.txt - what's left to do with rails-base
+	doc/rails-base/DONE.txt - what I've done to build rails-base
+
+
+Rails Extensions
+================
+Rake tasks for rails-base.
+	app:init - make the 2 changes that use the application's name, plus db:schema:empty. NAME=name (defaults to enclosing dirname)
+	db:config - interactively set database.yml settings
+	db:schema:empty - create an empty db/schema.rb (mkdir -p db && touch db/schema.rb)
+Rake tasks for svn.
+Rake tasks for git.
+Add --git option to script/generate backend, to run git-add on each new file (and git-rm for script/destroy).
+	If RAILS_ROOT/.git exists, and git and git-add are in path, automatically use --git option.
+	If RAILS_ROOT/.svn exists, and svn is in path, automatically use --svn option.
+
+
+Document how to use (in README.txt)
+===================
+(GIT) Copy rails-base to new boochtek app.
+	git clone ssh://bud.sluug.org/~booch/git/rails-base boochtek
+	cd boochtek
+(SVN) Copy rails-base to new boochtek app.
+	svn checkout svn+ssh://bud.sluug.org/~booch/svn/rails-base boochtek
+(OPTIONAL) Create server-side repository.
+	(See how I did it for boochtek project.)
+Change session_key name in config/environment.rb and database names in config/database.yml.
+	sed -i -e "s/rails-base/$PROJECT/" config/environment.rb
+	sed -i -e "s/rails-base/$PROJECT/" config/database.yml
+	git add config/environment.rb config/database.yml
+	git commit -m 'Set application-specific names for databases and session_key.'
+Set database config. (OPTIONAL - probably not necessary on developer systems.)
+Create databases.
+	rake db:create:all
+Pull updates from Rails-Base.
+	git pull rails-base master
+	git push
+Push changes to Rails-Base. (Assuming you have write permissions to the repository.)
+	git push rails-base master.
+
+
+GIT
+===
+Define aliases for the SSH URL, so we don't have to type the branch every time?
+	Yes -- in .git/remotes:
+		URL: ssh://bud.sluug.org/home/booch/git/rails-base
+		Push: master # refspec
+		Pull: master # refspec
+
+
+SVN
+===
+Push from GIT to SVN trunk.
+
+Tag releases.
+
+
+Selenium
+========
+See if selenium tests will run if we're not in test environment.
+	They should not, as running the setup routine wipes the database.
+	If they do, add functionality to prevent that.
+
+
+Plugins
+=======
+Look into updating annotate_models plugin.
+	Apply this patch, to also have it annotate RSpec fixtures.
+		http://rubyforge.org/pipermail/rspec-users/2007-May/001762.html
+	If I fork it or rewrite it, call it models:annotate.
+	Rake task should probably be called models:annotate.
+	Would like to only change lines that are different, ignoring white-space.
+		Because my text editor does white-space conversions.
+	Does it work with validation_reflection? DrySQL/MagicModelGenerator?
+	(Optionally) don't update the schema version number, unless schema for the model changes.
+
+Models and migrations.
+	./script/plugin install validation_reflection
+		Gets validations from SQL constraints.
+		Only have to specify a single statement in the model to add all derived validations.
+		Probably have to be better about specifying the constraints in the SQL.
+	./script/plugin install auto_migrations
+		svn://errtheblog.com/svn/plugins/auto_migrations
+		http://errtheblog.com/post/12447
+		rake db:schema:to_migration or rake db:auto:migrate
+	Improvements to auto_migrations?
+		Could add field definitions to models. MAYBE?
+			Parse them to generate schema.
+			When running Rails, they'll just verify that ActiveRecord gets what's expected.
+		Need to find a way to migrate data separately from schema.
+			Data only needs to be migrated occasionally.
+			Need to find a way to specify which schema changes require which data migrations.
+			Instead of sequence numbers, the system should keep track of the hash of the schema file.
+
+Authentication, authorization, etc.
+	./script/plugin install ssl_requirement
+	./script/plugin install restful_authentication
+	./script/plugin install openid_authentication
+	./script/plugin install rolerequirement
+		May be helpful, even with only 2-3 roles.
+		http://code.google.com/p/rolerequirement/

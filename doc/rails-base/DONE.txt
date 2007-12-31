@@ -1,0 +1,161 @@
+GIT
+===
+Requirements.
+	GIT (git-core) and git-svn must be installed on client and server.
+	SSH access to the server using public keys, so you don't have to type in the password every time.
+
+Decide where to place the repository. (Make sure it's in a location that will get backed up regularly.)
+	export GIT_SERVER=bud.sluug.org
+	export GIT_PATH=/home/booch/git
+	export GIT_BASE=ssh://$GIT_SERVER/$GIT_PATH
+	export PROJECT=rails-base
+	export GIT_URL=$GIT_BASE/$PROJECT
+
+Choose an account to "own the code" in the repository.
+	export GIT_OWNER=booch
+	export GIT_GROUP=booch-svn-rails
+
+Create temporary empty repository, and turn it into a tarball of a bare repository.
+	mkdir tmp
+	cd tmp
+	git init --shared=all
+	touch .gitignore
+	git add .
+	git commit -m 'Create repository.'
+	sed -i -e 's/bare = false/bare = true/g' .git/config
+	tar cfz ../git-repo.tgz -C .git .
+	cd ..
+	rm -rf tmp
+
+Copy GIT repository to server.
+	scp git-repo.tgz $GIT_SERVER:$GIT_PATH
+	ssh $GIT_SERVER "mkdir -p $GIT_PATH/$PROJECT && cd $GIT_PATH/$PROJECT && tar xfz ../git-repo.tgz"
+	ssh $GIT_SERVER "chown -R $GIT_OWNER:$GIT_GROUP $GIT_PATH/$PROJECT"
+	rm git-repo.tgz
+	ssh $GIT_SERVER "rm $GIT_PATH/git-repo.tgz"
+
+Allow external/web access (if enabled) to repository. (OPTIONAL)
+	ssh $GIT_SERVER "touch $GIT_PATH/$PROJECT/git-daemon-export-ok"
+
+Create local GIT repository.
+	git clone $GIT_URL $PROJECT
+	cd $PROJECT
+
+
+SVN
+===
+Requirements.
+	Client tools (''svn'' program) and the server tools (''svnadmin'' program) installed on server.
+	Client tools (''git-svn'' and ''svn'' program) installed on developer system.
+	SSH access to the server using public keys, so you don't have to type in the password every time.
+
+Decide where to place the repository. (Make sure it's in a location that will get backed up regularly.)
+	export SVN_SERVER=bud.sluug.org
+	export SVN_PATH=/home/booch/svn # Probably the most common choice is /var/svn/.
+	export SVN_BASE=svn+ssh://$SVN_SERVER/$SVN_DIR
+	export SVN_URL=$SVN_BASE/$PROJECT
+
+Choose an account to "own the code" in the repository.
+	export SVN_OWNER=booch # No compelling reason to create a system user for this.
+	export SVN_GROUP=booch-svn-rails
+
+Create SVN repository.
+	export PROJECT=rails-base
+	ssh $SVN_SERVER "mkdir -p $SVN_PATH && cd $SVN_PATH && svnadmin create $PROJECT"
+
+Fix some permissions, allowing project members to access the repository. (Not sure why these permissions are not set by default, but I had problems writing to the repository without them.)
+	ssh $SVN_SERVER "chown -R $SVN_OWNER:$SVN_GROUP $SVN_PATH/$PROJECT"
+	ssh $SVN_SERVER "chmod -R g+w $SVN_PATH/$PROJECT/{db,hooks,locks}"
+	ssh $SVN_SERVER "chmod g+s $SVN_PATH/$PROJECT/{db,hooks,locks,conf}"
+
+Make the repository private. (OPTIONAL)
+	ssh $SVN_SERVER "chmod -R o-rwx $SVN_PATH/$PROJECT"
+
+Create the Subversion repository structure.
+	svn mkdir $SVN_URL/trunk $SVN_URL/tags $SVN_URL/branches $SVN_URL/vendor \
+	  -m 'Create initial SVN repository structure.'
+
+
+Rails
+=====
+Create Rails 2.0.2 app.
+	rails .
+	git add .
+	git rm -f log/*
+	git commit -a -m 'Create Rails (2.0.2) app.'
+
+Ignore some common files.
+	echo '*~' >> .gitignore         # Backup files
+	echo '.DS_Store' >> .gitignore  # Mac OS
+	echo '.quanta' >> .gitignore    # Quanta+ editor
+	echo '*.webprj' >> .gitignore   # Quanta+ editor
+	echo '*.session' >> .gitignore  # Quanta+ editor
+	echo 'previous_failures.txt' >> .gitignore
+	mkdir -p tmp log coverage
+	touch tmp/.gitignore
+	echo '*' >> tmp/.gitignore
+	echo '!.gitignore' >> tmp/.gitignore
+	cp tmp/.gitignore log/.gitignore
+	cp tmp/.gitignore coverage/.gitignore
+	git add .gitignore tmp/.gitignore log/.gitignore coverage/.gitignore
+	git commit -a -m 'Ignore log files, temp files, backup files, etc.'
+
+Create an empty database schema, so we can run tests or specs.
+	mkdir db
+	touch db/.gitignore
+	echo '*.sqlite3' >> db/.gitignore  # SQLite data files
+	touch db/schema.rb
+	git add db
+	git commit -m 'Create (empty) db/schema.rb file to allow specs to run.'
+
+Push local changes up to server.
+	git push
+
+
+Plugins
+=======
+Testing - RSpec.
+	./script/plugin install http://rspec.rubyforge.org/svn/tags/CURRENT/rspec
+	./script/plugin install http://rspec.rubyforge.org/svn/tags/CURRENT/rspec_on_rails
+	git add vendor/plugins/rspec vendor/plugins/rspec_on_rails
+	./script/generate rspec # Create some files.
+	git add spec stories script/spec script/spec_server
+	git commit -m 'Install rspec and rspec_on_rails plugins.'
+
+Testing - Selenium.
+	./script/plugin install http://svn.openqa.org/svn/selenium-on-rails/selenium-on-rails
+	git add vendor/plugins/selenium-on-rails
+	git commit -m 'Install selenium-on-rails plugin.'
+
+Views - HAML.
+	sudo gem install haml
+	haml --rails .
+	cp vendor/plugins/haml/init.rb haml_init.tmp
+	sed -i -e 's/^\(.*\)$/  \1/g' haml_init.tmp
+	echo > vendor/plugins/haml/init.rb 'begin'
+	cat haml_init.tmp >> vendor/plugins/haml/init.rb
+	echo >> vendor/plugins/haml/init.rb 'rescue LoadError'
+	echo >> vendor/plugins/haml/init.rb "  puts 'HAML gem not installed. Please install it.'"
+	echo >> vendor/plugins/haml/init.rb 'end'
+	rm haml_init.tmp
+	git add vendor/plugins/haml
+	git commit -m 'Install haml plugin. (Requires haml gem.)'
+
+Controllers - will_paginate. (http://errtheblog.com/post/4791)
+	./script/plugin install svn://errtheblog.com/svn/plugins/will_paginate
+	git add vendor/plugins/will_paginate
+	git commit -m 'Install will_paginate plugin.'
+
+Controllers - exception_notification
+	./script/plugin install exception_notification
+	git add vendor/plugins/exception_notification
+	git commit -m 'Install exception_notification plugin.'
+
+Models - annotate_models
+	./script/plugin install http://repo.pragprog.com/svn/Public/plugins/annotate_models
+	git add vendor/plugins/annotate_models
+	git commit -m 'Install annotate_models plugin.'
+
+Push local changes up to server.
+	git push
+
