@@ -127,6 +127,10 @@ Testing - Selenium.
 	git add vendor/plugins/selenium-on-rails
 	git commit -m 'Install selenium-on-rails plugin.'
 
+Created a fix for Selenium-on-Rails plugin.
+	git add vendor/plugins/selenium-on-rails_hacks
+	git commit -m 'Fix selenium-on-rails view_path issue with Rails 2.0 (using evil twin plugin mechanism).'
+
 Views - HAML.
 	sudo gem install haml
 	haml --rails .
