@@ -108,6 +108,12 @@ Create an empty database schema, so we can run tests or specs.
 	git add db
 	git commit -m 'Create (empty) db/schema.rb file to allow specs to run.'
 
+Add staging environment.
+	cp config/environments/production.rb config/environments/staging.rb
+	Add staging section to config/database.yml
+	git add config
+	git commit -m 'Add staging environment.'
+
 Push local changes up to server.
 	git push
 

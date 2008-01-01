@@ -1,19 +1,11 @@
-Fix RSEL layout_path.
-	Move change to selenium-on-rails_hacks/.
 Deal w/ issues where developers need different database configs.
-	We can just use SQLite for development and test, and MySQL for staging and production.
-	MySQL needs socket on some systems, and port on others.
-	Make a rake task to configure.
-Add staging environment, and make staging and production use MySQL by default. (RAILS-BASE)
-Add staging environment.
+	Use SQLite for development and test.
+	Use MySQL for staging and production.
+		root/no password
+Make a rake task (db:config) to configure database settings.
 Make sure rake spec passes out of the box.
 Make sure rake test passes out of the box.
 Do better with log files in GIT.
-	Add to log/.gitignore:
-		!.gitignore
-		*
-	Apparently, we cannot ignore anything that's already in the index.
-		So we have to git rm all the log and tmp files.
 	Might want to create tmp and log dirs and files in init script, since they probably need special permissions.
 Changes to Selenium-on-Rails to make it more usable.
 	Passing regexps, symbols, and strings better.
@@ -50,7 +42,7 @@ Rails 2.0. (PROBABLY)
 RubyGems. (PROBABLY)
 Rake. (PROBABLY)
 MySQL gem. (PROBABLY)
-SQLite gem. (MAYME)
+SQLite gem. (PROBABLY)
 HAML. (OPTIONAL)
 	gem install haml
 
@@ -58,10 +50,7 @@ HAML. (OPTIONAL)
 
 Documentation
 =============
-Create doc/rails-base directory for documentation specific to rails-base.
-	doc/rails-base/README.txt - how to use rails-base
-	doc/rails-base/TODO.txt - what's left to do with rails-base
-	doc/rails-base/DONE.txt - what I've done to build rails-base
+doc/rails-base/README.txt - how to use rails-base
 
 
 Rails Extensions
@@ -98,7 +87,7 @@ Pull updates from Rails-Base.
 	git pull rails-base master
 	git push
 Push changes to Rails-Base. (Assuming you have write permissions to the repository.)
-	git push rails-base master.
+	git push rails-base master
 
 
 GIT
