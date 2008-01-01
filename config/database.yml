@@ -13,12 +13,14 @@ test:
   database: db/test.sqlite3
   timeout: 5000
 
-production:
-  adapter: sqlite3
-  database: db/production.sqlite3
-  timeout: 5000
-
 staging:
-  adapter: sqlite3
-  database: db/staging.sqlite3
-  timeout: 5000
+  adapter: mysql
+  database: rails-base_staging
+  username: root
+  password:
+
+production:
+  adapter: mysql
+  database: rails-base_production
+  username: root
+  password:

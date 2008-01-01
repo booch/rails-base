@@ -114,6 +114,13 @@ Add staging environment.
 	git add config
 	git commit -m 'Add staging environment.'
 
+Use MySQL (by default) for staging and production environments.
+	Modify config/database.yml to use mysql adapter.
+		Keep using SQLite for development and test.
+		Use username of root, with blank password. (Applications should change these.)
+	git add .
+	git commit -m 'Use MySQL (by default) for staging and production environments.'
+
 Push local changes up to server.
 	git push
 

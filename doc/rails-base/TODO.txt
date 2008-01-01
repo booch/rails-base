@@ -1,8 +1,4 @@
-Deal w/ issues where developers need different database configs.
-	Use SQLite for development and test.
-	Use MySQL for staging and production.
-		root/no password
-Make a rake task (db:config) to configure database settings.
+Make a rake task (db:config) to configure database settings for all environments.
 Make sure rake spec passes out of the box.
 Make sure rake test passes out of the box.
 Do better with log files in GIT.
