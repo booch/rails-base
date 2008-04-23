@@ -1,4 +1,13 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :users
+
+  map.resource :session
+
+	# Not sure if we actually HAVE to have 'user/login' or if 'sessions/new'
+	# will suffice, but this will make the acceptance test pass
+	map.connect 'user/login',  :controller => 'sessions', :action => :new
+	map.connect 'user/logout', :controller => 'sessions', :action => :destroy
+
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:

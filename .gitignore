@@ -4,3 +4,4 @@
 *.webprj
 *.session
 previous_failures.txt
+*.swp
