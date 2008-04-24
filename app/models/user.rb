@@ -17,11 +17,7 @@ class User < ActiveRecord::Base
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :password, :password_confirmation
 
-  # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
-  def self.authenticate(login, password)
-    u = find_by_login(login) # need to get the salt
-    u && u.authenticated?(password) ? u : nil
-  end
+  before_create :make_activation_code
 
   # Encrypts some data with the salt.
   def self.encrypt(password, salt)
@@ -62,22 +58,44 @@ class User < ActiveRecord::Base
     save(false)
   end
 
+  # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
+  def self.authenticate(login, password)
+    # hide records with a nil activated_at
+    u = find :first, :conditions => ['login = ? and activated_at IS NOT NULL', login]
+    u && u.authenticated?(password) ? u : nil
+  end
+
+  # Activates the user in the database.
+  def activate!
+    @activated = true
+    self.activated_at = Time.now.utc
+		self.activation_code = nil
+		self.save(false)
+  end
+
+
   # Returns true if the user has just been activated.
   def recently_activated?
     @activated
   end
 
   protected
-    # before filter 
-    def encrypt_password
-      return if password.blank?
-      self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{login}--") if new_record?
-      self.crypted_password = encrypt(password)
-    end
-      
-    def password_required?
-      crypted_password.blank? || !password.blank?
-    end
+
+  # If you're going to use activation, uncomment this too
+  def make_activation_code
+    self.activation_code = Digest::SHA1.hexdigest( Time.now.to_s.split(//).sort_by {rand}.join )
+  end
+
+  # before filter 
+  def encrypt_password
+    return if password.blank?
+    self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{login}--") if new_record?
+    self.crypted_password = encrypt(password)
+  end
+    
+  def password_required?
+    crypted_password.blank? || !password.blank?
+  end
     
     
 end

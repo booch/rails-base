@@ -7,6 +7,10 @@ include AuthenticatedTestHelper
 describe SessionsController do
   fixtures :users
 
+	before(:each) do
+		users(:quentin).activate!
+	end
+
   it 'logins and redirects' do
     post :create, :login => 'quentin', :password => 'test'
     session[:user_id].should_not be_nil

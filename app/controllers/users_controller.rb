@@ -24,4 +24,13 @@ class UsersController < ApplicationController
     end
   end
 
+  def activate
+    @user = User.find_by_activation_code(params[:id])
+    if @user and @user.activate!
+      self.current_user = @user
+      redirect_back_or_default('/')
+      flash[:notice] = "Your account has been activated." 
+    end
+  end
+
 end

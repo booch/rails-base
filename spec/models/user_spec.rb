@@ -21,6 +21,10 @@ describe User do
     end
   end
 
+	before(:each) do
+		users(:quentin).activate!
+	end
+
   it 'requires login' do
     lambda do
       u = create_user(:login => nil)
@@ -101,6 +105,26 @@ describe User do
     users(:quentin).remember_token_expires_at.should_not be_nil
     users(:quentin).remember_token_expires_at.between?(before, after).should be_true
   end
+
+	describe "when first created" do
+		it 'should not be able to login until gets activated' do
+			u = create_user
+      User.authenticate('quire', 'quire').should == nil
+
+			u.activate!
+      User.authenticate('quire', 'quire').should_not == nil
+		end
+
+  	it 'should have an activation code' do
+			u = create_user
+			u.activation_code.should_not == nil
+  	end
+
+		it 'should not have an activation time' do
+			u = create_user
+			u.activated_at.should == nil
+		end
+	end
 
 protected
   def create_user(options = {})
