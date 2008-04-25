@@ -84,7 +84,7 @@ class User < ActiveRecord::Base
     conds = { :password_reset_code => code }
     u = self.find(:first, :conditions => conds)
 
-    u unless Time.now > u.password_reset_code_expires_at
+    u unless u.nil? || Time.now > u.password_reset_code_expires_at
   end
 
   def forgot_password
