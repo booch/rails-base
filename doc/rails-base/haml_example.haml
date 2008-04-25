@@ -1,0 +1,36 @@
+!!!
+%html
+  %head
+    %title= "Film Fest :: "+controller.controller_name.capitalize
+    = stylesheet_link_tag 'screen'
+    = javascript_include_tag 'ufo'
+  %body
+    #container
+      #banner
+        %h1 Podcast Film Festival
+      #left
+        %h2 Menu
+        %ul
+          - if logged_in?
+            %li= link_to "My Account", edit_user_url(current_user)
+            %li= link_to "Films", categories_url
+            %li= link_to "Messages", view_messages_for_user_url({:user_id =&gt; "#{current_user.id}"})
+            %li= link_to "My Blog", view_blog_for_user_url({:user_id =&gt; "#{current_user.id}"})
+            %li= link_to "Log out", logout_url
+          %li Invite Friends
+          %li= link_to "Users", users_url
+          - unless logged_in?
+            %li
+              = link_to "Log In", new_session_url
+          - if is_admin?
+            %h3 Logged in as an admin
+            %p administration privileges granted
+            %li= link_to "Pages", pages_url
+            %li= link_to "Approve Assets", assets_url
+      #content
+        = yield
+        - unless flash[:notice].blank?
+          #flash
+            = flash[:notice]
+      #footer
+        %h1 In sexy code we trust
