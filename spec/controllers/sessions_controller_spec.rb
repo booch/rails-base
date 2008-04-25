@@ -1,9 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-# Be sure to include AuthenticatedTestHelper in spec/spec_helper.rb instead
-# Then, you can remove it from this and the units test.
-include AuthenticatedTestHelper
-
 describe SessionsController do
   fixtures :users
 
@@ -24,7 +20,7 @@ describe SessionsController do
   end
 
   it 'logs out' do
-    login_as :quentin
+    post :create, :login => 'quentin', :password => 'test'
     get :destroy
     session[:user_id].should be_nil
     response.should be_redirect
@@ -41,7 +37,7 @@ describe SessionsController do
   end
 
   it 'deletes token on logout' do
-    login_as :quentin
+    post :create, :login => 'quentin', :password => 'test'
     get :destroy
     response.cookies["auth_token"].should == []
   end
