@@ -46,6 +46,31 @@ describe UsersController do
     end.should_not change(User, :count)
   end
 
+  it 'should allow a user that forgot their password to create a password_reset_code' do
+    users(:aaron).password_reset_code.should be_nil
+
+    post :create_password_reset_code, :email => users(:aaron).email
+
+    users(:aaron).reload
+    users(:aaron).password_reset_code.should_not be_nil
+  end
+
+  it 'should allow a user with a recent password_reset_code to change their password' do
+    old_password = users(:aaron).crypted_password
+
+    post :create_password_reset_code, :email => users(:aaron).email
+
+    users(:aaron).reload
+    post :change_forgotten_password,
+      :password_reset_code => users(:aaron).password_reset_code,
+      :password => "newpassword",
+      :password_confirmation => "newpassword"
+
+    users(:aaron).reload
+    new_password = users(:aaron).crypted_password
+
+    old_password.should_not == new_password
+  end
 
   
   def create_user(options = {})

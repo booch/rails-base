@@ -2,7 +2,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users, :collection => {
     :activate => :get,
     :forgot_password => :get,
-    :reset_password => :get
+    :create_password_reset_code => :post,
+    :reset_password => :get,
+    :change_forgotten_password => :post
   }
 
   map.resource :session

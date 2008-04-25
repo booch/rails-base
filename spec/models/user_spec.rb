@@ -154,6 +154,18 @@ describe User do
 
       u.reset_password(Time.now).should == true
     end
+
+    it 'should be able to be found with User.find_by_password_reset_code for 48 hours' do
+      u = create_user
+      u.forgot_password
+
+      code = u.password_reset_code
+      u2 = User.find_by_password_reset_code(code)
+
+      u2.should_not be_nil
+      u.id.should == u2.id
+      u2.password_reset_code_expires_at.should > Time.now
+    end
   end
 
 protected

@@ -34,35 +34,41 @@ class UsersController < ApplicationController
   end
 
   def forgot_password
-    return unless request.post?
+  end
+
+  def create_password_reset_code
     if @user = User.find_by_email(params[:email])
       @user.forgot_password
       @user.save
-      redirect_back_or_default(:controller => '/account', :action => 'index')
+      redirect_back_or_default('/')
       flash[:notice] = "A password reset link has been sent to your email address" 
     else
       flash[:notice] = "Could not find a user with that email address" 
     end
   end
 
+
   def reset_password
-    @user = User.find_by_password_reset_code(params[:id])
-    raise if @user.nil?
-    return if @user unless params[:password]
-      if (params[:password] == params[:password_confirmation])
-        self.current_user = @user #for the next two lines to work
-        current_user.password_confirmation = params[:password_confirmation]
-        current_user.password = params[:password]
-        @user.reset_password
-        flash[:notice] = current_user.save ? "Password reset" : "Password not reset" 
-      else
-        flash[:notice] = "Password mismatch" 
-      end  
-      redirect_back_or_default(:controller => '/account', :action => 'index') 
-  rescue
-    logger.error "Invalid Reset Code entered" 
-    flash[:notice] = "Sorry - That is an invalid password reset code. Please check your code and try again. (Perhaps your email client inserted a carriage return?" 
-    redirect_back_or_default(:controller => '/account', :action => 'index')
+    @password_reset_code = params[:id]
+    user = User.find_by_password_reset_code(@password_reset_code)
+    flash[:error] = "Bad password reset code" if user.nil?
+  end
+
+  # XXX: I believe only posts are allowed here, but it wouldnt hurt to
+  # test this.
+  def change_forgotten_password
+    user = User.find_by_password_reset_code(params[:password_reset_code])
+    if params[:password] == params[:password_confirmation]
+
+      user.password_confirmation = params[:password_confirmation]
+      user.password = params[:password]
+      user.reset_password
+
+      flash[:notice] = user.save ? "Password reset" : "Password not reset" 
+      redirect_back_or_default(:action => "reset_password")
+    else
+      flash[:notice] = "Password mismatch" 
+    end  
   end
 
 end
