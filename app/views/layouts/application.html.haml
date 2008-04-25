@@ -1,0 +1,12 @@
+!!!
+%html
+  %head
+  %body
+    - if flash[:notice]
+      #notice
+        = "Notice: #{flash[:notice]}"
+    - if flash[:error]
+      #error
+        = "Error: #{flash[:error]}"
+    = yield :layout
+

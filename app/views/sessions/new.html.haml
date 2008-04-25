@@ -1,0 +1,15 @@
+- form_tag session_path do
+  %p
+    %label{:for => "login"} Login
+    = text_field_tag 'login'
+
+  %p
+    %label{:for => "password"} Password
+    = text_field_tag 'password'
+
+  %p
+    %label{:for => "remember_me"} Remember Me
+    = text_field_tag 'remember_me'
+
+  %p
+    = submit_tag 'Log in'
