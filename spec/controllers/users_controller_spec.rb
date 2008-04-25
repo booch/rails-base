@@ -55,7 +55,7 @@ describe UsersController do
     users(:aaron).password_reset_code.should_not be_nil
   end
 
-  it 'should allow a user with a recent password_reset_code to change their password' do
+  it 'should allow a user with a recent password_reset_code to change their password if two matching passwords are supplied' do
     old_password = users(:aaron).crypted_password
 
     post :create_password_reset_code, :email => users(:aaron).email
@@ -69,7 +69,72 @@ describe UsersController do
     users(:aaron).reload
     new_password = users(:aaron).crypted_password
 
-    old_password.should_not == new_password
+    new_password.should_not == be_nil
+    new_password.should_not == old_password
+  end
+
+  it 'should not allow a user with a recent password_reset_code to change their password if two different passwords are supplied' do
+    old_password = users(:aaron).crypted_password
+
+    post :create_password_reset_code, :email => users(:aaron).email
+
+    users(:aaron).reload
+    post :change_forgotten_password,
+      :password_reset_code => users(:aaron).password_reset_code,
+      :password => "onepassword",
+      :password_confirmation => "twopassword"
+
+    users(:aaron).reload
+    new_password = users(:aaron).crypted_password
+
+    new_password.should == old_password
+  end
+
+  it 'should allow a user to change their email address' do
+    old_email = users(:aaron).email
+
+    put :update,
+      :id => users(:aaron).id,
+      :user => { :email => "new@new.new" }
+
+    users(:aaron).reload
+    new_email = users(:aaron).email
+
+    new_email.should_not == old_email
+    new_email.should == "new@new.new"
+  end
+
+  it 'should allow a user to change their password if they supplied two matching passwords' do
+    old_password = users(:aaron).crypted_password
+
+    put :update,
+      :id => users(:aaron).id,
+      :user => {
+        :password => "newpassword",
+        :password_confirmation => "newpassword"
+      }
+
+    users(:aaron).reload
+    new_password = users(:aaron).crypted_password
+
+    new_password.should_not == be_nil
+    new_password.should_not == old_password
+  end
+
+  it 'should not allow a user to change their password if they supplied two different passwords' do
+    old_password = users(:aaron).crypted_password
+
+    put :update,
+      :id => users(:aaron).id,
+      :user => {
+        :password => "onepassword",
+        :password_confirmation => "twopassword"
+      }
+
+    users(:aaron).reload
+    new_password = users(:aaron).crypted_password
+
+    new_password.should == old_password
   end
 
   
