@@ -7,9 +7,9 @@ include AuthenticatedTestHelper
 describe SessionsController do
   fixtures :users
 
-	before(:each) do
-		users(:quentin).activate!
-	end
+  before(:each) do
+    users(:quentin).activate!
+  end
 
   it 'logins and redirects' do
     post :create, :login => 'quentin', :password => 'test'
@@ -66,6 +66,18 @@ describe SessionsController do
     request.cookies["auth_token"] = auth_token('invalid_auth_token')
     get :new
     controller.send(:logged_in?).should_not be_true
+  end
+
+  it 'should fail login until account is activated' do
+    post :create, :login => 'aaron', :password => 'test', :remember_me => "0"
+    session[:user_id].should be_nil
+    response.should_not be_redirect
+
+    users(:aaron).activate!
+
+    post :create, :login => 'aaron', :password => 'test', :remember_me => "0"
+    session[:user_id].should_not be_nil
+    response.should be_redirect
   end
 
   def auth_token(token)

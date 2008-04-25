@@ -69,17 +69,50 @@ class User < ActiveRecord::Base
   def activate!
     @activated = true
     self.activated_at = Time.now.utc
-		self.activation_code = nil
-		self.save(false)
+    self.activation_code = nil
+    self.save(false)
   end
-
 
   # Returns true if the user has just been activated.
   def recently_activated?
     @activated
   end
 
-  protected
+  def forgot_password
+     @forgotten_password = true
+     self.make_password_reset_code
+   end
+
+   def reset_password(current_date = Time.now)
+     expiration_date = self.password_reset_code_expires_at
+
+     self.password_reset_code = nil
+     self.password_reset_code_expires_at = nil
+
+     # If the password is not reset within the window, then
+     # the password should not be reset.
+     if current_date > expiration_date
+       return false
+     else
+       @reset_password = true
+     end
+   end
+
+   def recently_reset_password?
+     @reset_password
+   end
+
+   def recently_forgot_password?
+     @forgotten_password
+   end
+
+   protected
+
+   def make_password_reset_code
+     self.password_reset_code = Digest::SHA1.hexdigest( Time.now.to_s.split(//).sort_by {rand}.join )
+     self.password_reset_code_expires_at = 48.hours.from_now
+     self.save(false)
+   end
 
   # If you're going to use activation, uncomment this too
   def make_activation_code

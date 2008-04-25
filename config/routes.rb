@@ -1,13 +1,17 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :users
+  map.resources :users, :collection => {
+    :activate => :get,
+    :forgot_password => :get,
+    :reset_password => :get
+  }
 
   map.resource :session
 
-	# XXX: Not sure if we actually HAVE to have 'user/login' or if
-	# 'sessions/new' will suffice, but this will make the acceptance
-	# test pass.
-	map.login  'user/login',  :controller => 'sessions', :action => :new
-	map.logout 'user/logout', :controller => 'sessions', :action => :destroy
+  # XXX: Not sure if we actually HAVE to have 'user/login' or if
+  # 'sessions/new' will suffice, but this will make the acceptance
+  # test pass.
+  map.login  'user/login',  :controller => 'sessions', :action => :new
+  map.logout 'user/logout', :controller => 'sessions', :action => :destroy
 
   # The priority is based upon order of creation: first created -> highest priority.
 

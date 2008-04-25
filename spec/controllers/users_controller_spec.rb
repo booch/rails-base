@@ -14,10 +14,6 @@ describe UsersController do
     end.should change(User, :count).by(1)
   end
 
-  
-
-  
-
   it 'requires login on signup' do
     lambda do
       create_user(:login => nil)
@@ -49,8 +45,8 @@ describe UsersController do
       response.should be_success
     end.should_not change(User, :count)
   end
-  
-  
+
+
   
   def create_user(options = {})
     post :create, :user => { :login => 'quire', :email => 'quire@example.com',

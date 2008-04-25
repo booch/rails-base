@@ -21,9 +21,9 @@ describe User do
     end
   end
 
-	before(:each) do
-		users(:quentin).activate!
-	end
+  before(:each) do
+    users(:quentin).activate!
+  end
 
   it 'requires login' do
     lambda do
@@ -106,25 +106,55 @@ describe User do
     users(:quentin).remember_token_expires_at.between?(before, after).should be_true
   end
 
-	describe "when first created" do
-		it 'should not be able to login until gets activated' do
-			u = create_user
+  describe 'when first created' do
+    it 'should not be able to login until gets activated' do
+      u = create_user
       User.authenticate('quire', 'quire').should == nil
 
-			u.activate!
+      u.activate!
       User.authenticate('quire', 'quire').should_not == nil
-		end
+    end
 
-  	it 'should have an activation code' do
-			u = create_user
-			u.activation_code.should_not == nil
-  	end
+    it 'should have an activation code' do
+      u = create_user
+      u.activation_code.should_not == nil
+    end
 
-		it 'should not have an activation time' do
-			u = create_user
-			u.activated_at.should == nil
-		end
-	end
+    it 'should not have an activation time' do
+      u = create_user
+      u.activated_at.should == nil
+    end
+
+    it 'should not have a password reset code or expiration time' do
+      u = create_user
+      u.password_reset_code.should == nil
+      u.password_reset_code_expires_at.should == nil
+    end
+  end
+
+  describe 'that forgot password' do
+    it 'should be able to generate a password reset code' do
+      u = create_user
+      u.forgot_password
+
+      u.password_reset_code.should_not == nil
+      u.password_reset_code_expires_at.should_not == nil
+    end
+
+    it 'should not be able to reset password if it is not done within 48 hours' do
+      u = create_user
+      u.forgot_password
+
+      u.reset_password(48.hours.from_now).should == false
+    end
+
+    it 'should be able to reset password if it is done within 48 hours' do
+      u = create_user
+      u.forgot_password
+
+      u.reset_password(Time.now).should == true
+    end
+  end
 
 protected
   def create_user(options = {})
