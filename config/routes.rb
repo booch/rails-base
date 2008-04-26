@@ -1,9 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
-  # XXX: Have UserController that works for one user.
-  # map.resource :user
-
-  # XXX: Make this work for user administration
-  map.resources :users, :member => {
+  map.resource :user, :controller => 'user', :member => {
     :activate => :get,
     :forgot_password => :get,
     :create_password_reset_code => :post,
@@ -11,16 +7,18 @@ ActionController::Routing::Routes.draw do |map|
     :change_forgotten_password => :post
   }
 
+  map.resources :users
+
   # XXX: This is kind of kludgy. Other ideas?
-  map.resource :session, :member => {
+  map.resource :session, :controller => 'session', :member => {
     :logout => :get
   }
 
   # XXX: Not sure if we actually HAVE to have 'user/login' or if
   # 'sessions/new' will suffice, but this will make the acceptance
   # test pass.
-  map.login  'user/login',  :controller => 'sessions', :action => :new
-  map.logout 'user/logout', :controller => 'sessions', :action => :logout
+  map.login  'user/login',  :controller => 'session', :action => :new
+  map.logout 'user/logout', :controller => 'session', :action => :logout
 
   # XXX: Can take this out later
   map.index '/', :controller => 'index', :action => :index

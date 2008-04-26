@@ -4,7 +4,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 # Then, you can remove it from this and the units test.
 include AuthenticatedTestHelper
 
-describe UsersController do
+describe UserController do
   fixtures :users
 
   it 'allows signup' do

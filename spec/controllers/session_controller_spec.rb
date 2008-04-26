@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe SessionsController do
+describe SessionController do
   fixtures :users
 
   before(:each) do
@@ -72,6 +72,12 @@ describe SessionsController do
     users(:aaron).activate!
 
     post :create, :login => 'aaron', :password => 'test', :remember_me => "0"
+    session[:user_id].should_not be_nil
+    response.should be_redirect
+  end
+
+  it 'should redirect activated users to homepage when they log in' do
+    post :create, :login => 'activated', :password => 'test'
     session[:user_id].should_not be_nil
     response.should be_redirect
   end
