@@ -1,0 +1,18 @@
+%h1 Homepage
+
+%p
+  - if current_user.nil?
+    = "You are not logged in"
+  - else
+    = h current_user.inspect
+
+%p
+  - if current_user && !current_user.activation_code.nil?
+    = link_to "activate!", :controller => :users, :action => :activate, :id => current_user.activation_code
+
+%p
+  - if current_user.nil?
+    = link_to "Login", "/user/login"
+  - else
+    = link_to "Logout", "/session", :method => :delete
+

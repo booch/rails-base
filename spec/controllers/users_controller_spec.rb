@@ -55,86 +55,116 @@ describe UsersController do
     users(:aaron).password_reset_code.should_not be_nil
   end
 
-  it 'should allow a user with a recent password_reset_code to change their password if two matching passwords are supplied' do
-    old_password = users(:aaron).crypted_password
+  describe 'without logging in' do
+    it 'should not allow access to pages that need authentication' do
+      response = get(:show)
+      response.should be_redirect
 
-    post :create_password_reset_code, :email => users(:aaron).email
+      response = get(:edit)
+      response.should be_redirect
 
-    users(:aaron).reload
-    post :change_forgotten_password,
-      :password_reset_code => users(:aaron).password_reset_code,
-      :password => "newpassword",
-      :password_confirmation => "newpassword"
+      response = put(:update)
+      response.should be_redirect
+    end
 
-    users(:aaron).reload
-    new_password = users(:aaron).crypted_password
+    it 'should allow access to public pages' do
+      response = get(:activate, :id => "fake")
+      response.should_not be_redirect
 
-    new_password.should_not == be_nil
-    new_password.should_not == old_password
+      response = get(:reset_password)
+      response.should_not be_redirect
+
+      response = get(:forgot_password)
+      response.should_not be_redirect
+    end
   end
 
-  it 'should not allow a user with a recent password_reset_code to change their password if two different passwords are supplied' do
-    old_password = users(:aaron).crypted_password
+  describe 'after logging in' do
+    before(:each) do
+      login_as(:aaron)
+    end
 
-    post :create_password_reset_code, :email => users(:aaron).email
+    it 'should allow a user with a recent password_reset_code to change their password if two matching passwords are supplied' do
+      old_password = users(:aaron).crypted_password
 
-    users(:aaron).reload
-    post :change_forgotten_password,
-      :password_reset_code => users(:aaron).password_reset_code,
-      :password => "onepassword",
-      :password_confirmation => "twopassword"
+      post :create_password_reset_code, :email => users(:aaron).email
 
-    users(:aaron).reload
-    new_password = users(:aaron).crypted_password
-
-    new_password.should == old_password
-  end
-
-  it 'should allow a user to change their email address' do
-    old_email = users(:aaron).email
-
-    put :update,
-      :id => users(:aaron).id,
-      :user => { :email => "new@new.new" }
-
-    users(:aaron).reload
-    new_email = users(:aaron).email
-
-    new_email.should_not == old_email
-    new_email.should == "new@new.new"
-  end
-
-  it 'should allow a user to change their password if they supplied two matching passwords' do
-    old_password = users(:aaron).crypted_password
-
-    put :update,
-      :id => users(:aaron).id,
-      :user => {
+      users(:aaron).reload
+      post :change_forgotten_password,
+        :password_reset_code => users(:aaron).password_reset_code,
         :password => "newpassword",
         :password_confirmation => "newpassword"
-      }
 
-    users(:aaron).reload
-    new_password = users(:aaron).crypted_password
+      users(:aaron).reload
+      new_password = users(:aaron).crypted_password
 
-    new_password.should_not == be_nil
-    new_password.should_not == old_password
-  end
+      new_password.should_not == be_nil
+      new_password.should_not == old_password
+    end
 
-  it 'should not allow a user to change their password if they supplied two different passwords' do
-    old_password = users(:aaron).crypted_password
+    it 'should not allow a user with a recent password_reset_code to change their password if two different passwords are supplied' do
+      old_password = users(:aaron).crypted_password
 
-    put :update,
-      :id => users(:aaron).id,
-      :user => {
+      post :create_password_reset_code, :email => users(:aaron).email
+
+      users(:aaron).reload
+      post :change_forgotten_password,
+        :password_reset_code => users(:aaron).password_reset_code,
         :password => "onepassword",
         :password_confirmation => "twopassword"
-      }
 
-    users(:aaron).reload
-    new_password = users(:aaron).crypted_password
+      users(:aaron).reload
+      new_password = users(:aaron).crypted_password
 
-    new_password.should == old_password
+      new_password.should == old_password
+    end
+
+    it 'should allow a user to change their email address' do
+      old_email = users(:aaron).email
+
+      put :update,
+        :id => users(:aaron).id,
+        :user => { :email => "new@new.new" }
+
+      users(:aaron).reload
+      new_email = users(:aaron).email
+
+      new_email.should_not == old_email
+      new_email.should == "new@new.new"
+    end
+
+    it 'should allow a user to change their password if they supplied two matching passwords' do
+      old_password = users(:aaron).crypted_password
+
+      put :update,
+        :id => users(:aaron).id,
+        :user => {
+          :password => "newpassword",
+          :password_confirmation => "newpassword"
+        }
+
+      users(:aaron).reload
+      new_password = users(:aaron).crypted_password
+
+      new_password.should_not == be_nil
+      new_password.should_not == old_password
+    end
+
+    it 'should not allow a user to change their password if they supplied two different passwords' do
+      old_password = users(:aaron).crypted_password
+
+      put :update,
+        :id => users(:aaron).id,
+        :user => {
+          :password => "onepassword",
+          :password_confirmation => "twopassword"
+        }
+
+      users(:aaron).reload
+      new_password = users(:aaron).crypted_password
+
+      new_password.should == old_password
+    end
   end
 
   
