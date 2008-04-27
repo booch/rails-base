@@ -1,6 +1,7 @@
-= error_messages_for :user
+%h1 User Administration
 
-- form_for @user, :url => user_path do |f|
+
+- form_for :user, :url => users_path do |f|
   %p
     %label{:for => "login"} Login
     = f.text_field :login
@@ -18,4 +19,4 @@
     = f.password_field :password_confirmation
 
   %p
-    = submit_tag 'Create'
+    = submit_tag 'Sign Up'

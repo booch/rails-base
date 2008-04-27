@@ -7,7 +7,13 @@ ActionController::Routing::Routes.draw do |map|
     :change_forgotten_password => :post
   }
 
-  map.resources :users
+  # Made suspend a put, because it is basically an update call.
+  map.resources :users, :member => {
+    :suspend => :put,
+    :roles => :get,
+    :add_roles => :post,
+    :remove_roles => :delete
+  }
 
   # XXX: This is kind of kludgy. Other ideas?
   map.resource :session, :controller => 'session', :member => {

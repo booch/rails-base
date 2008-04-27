@@ -1,3 +1,16 @@
+%h1 User Administration
 
-%h1 You Made It
+%table
+  %tr
+    %td Login
+    %td Email
+    %td Roles
+    %td Activated?
+  - @users.each do |user|
+    %tr
+      %td= link_to user.login, edit_user_url(user)
+      %td= user.email
+      %td= user.roles.map(&:name).join ', '
+      %td= !!user.activated_at
 
+%p= link_to "New User", new_user_url 

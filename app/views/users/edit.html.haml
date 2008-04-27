@@ -1,0 +1,11 @@
+- form_for(@user, :url => user_path(@user), :html => {:method => :put}) do |f|
+  %p
+    %label{:for => "login"} Login
+    = f.text_field :login
+
+  %p
+    %label{:for => "email"} Email
+    = f.text_field :email
+
+  %p
+    = submit_tag 'Submit'
