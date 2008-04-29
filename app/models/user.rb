@@ -63,7 +63,8 @@ class User < ActiveRecord::Base
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
     # hide records with a nil activated_at
-    u = find :first, :conditions => ['login = ? and activated_at IS NOT NULL', login]
+    # hide records that are suspended
+    u = self.find :first, :conditions => ['login = ? and activated_at IS NOT NULL and (suspended = ? or suspended IS NULL)', login, false]
     u && u.authenticated?(password) ? u : nil
   end
 
@@ -121,6 +122,14 @@ class User < ActiveRecord::Base
     @_list ||= self.roles.collect(&:name)
     return true if @_list.include?("admin")
     (@_list.include?(role_in_question.to_s) )
+  end
+
+  def suspend!
+    self.update_attribute(:suspended, true)
+  end
+
+  def unsuspend!
+    self.update_attribute(:suspended, false)
   end
 
   protected

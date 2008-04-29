@@ -1,0 +1,5 @@
+- form_for @user, :url => change_roles_user_url(@user), :method => :put do |f|
+  %select{:size => @roles.size, :multiple => "multiple", :name => 'user[roles][]', :id => 'user_roles'}
+    = options_for_select(@roles.map {|r| [r.name, r.id]}, @user.roles.map(&:id))
+
+  = f.submit "Save"

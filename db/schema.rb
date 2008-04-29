@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 4) do
+ActiveRecord::Schema.define(:version => 5) do
 
   create_table "roles", :force => true do |t|
     t.string "name"
@@ -20,8 +20,8 @@ ActiveRecord::Schema.define(:version => 4) do
     t.integer "user_id"
   end
 
-  add_index "roles_users", ["user_id"], :name => "index_roles_users_on_user_id"
   add_index "roles_users", ["role_id"], :name => "index_roles_users_on_role_id"
+  add_index "roles_users", ["user_id"], :name => "index_roles_users_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "login"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(:version => 4) do
     t.datetime "activated_at"
     t.string   "password_reset_code",            :limit => 40
     t.datetime "password_reset_code_expires_at"
+    t.boolean  "suspended"
   end
 
 end

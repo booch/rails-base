@@ -106,53 +106,66 @@ describe User do
     users(:quentin).remember_token_expires_at.between?(before, after).should be_true
   end
 
+  describe 'that is suspended' do
+    it 'should not be able to login' do
+      User.authenticate(users(:suspended).login, 'test').should be_nil
+
+      users(:suspended).unsuspend!
+      User.authenticate(users(:suspended).login, 'test').should_not be_nil
+    end
+  end
+
   describe 'when first created' do
+    before(:each) do
+      @u = create_user
+    end
+
     it 'should not be able to login until gets activated' do
-      u = create_user
       User.authenticate('quire', 'quire').should == nil
 
-      u.activate!
+      @u.activate!
       User.authenticate('quire', 'quire').should_not == nil
     end
 
     it 'should have an activation code' do
-      u = create_user
-      u.activation_code.should_not == nil
+      @u.activation_code.should_not == nil
     end
 
     it 'should not have an activation time' do
-      u = create_user
-      u.activated_at.should == nil
+      @u.activated_at.should == nil
     end
 
     it 'should not have a password reset code or expiration time' do
-      u = create_user
-      u.password_reset_code.should == nil
-      u.password_reset_code_expires_at.should == nil
+      @u.password_reset_code.should == nil
+      @u.password_reset_code_expires_at.should == nil
     end
   end
 
   describe 'that forgot password' do
-    it 'should be able to generate a password reset code' do
-      u = create_user
-      u.forgot_password
+    before(:each) do
+      @u = create_user
+    end
 
-      u.password_reset_code.should_not == nil
-      u.password_reset_code_expires_at.should_not == nil
+    it 'should be able to generate a password reset code' do
+      @u.password_reset_code.should be_nil
+      @u.password_reset_code_expires_at.should be_nil
+
+      @u.forgot_password
+
+      @u.password_reset_code.should_not be_nil
+      @u.password_reset_code_expires_at.should_not be_nil
     end
 
     it 'should not be able to reset password if it is not done within 48 hours' do
-      u = create_user
-      u.forgot_password
+      @u.forgot_password
 
-      u.reset_password(48.hours.from_now).should == false
+      @u.reset_password(48.hours.from_now).should be_false
     end
 
     it 'should be able to reset password if it is done within 48 hours' do
-      u = create_user
-      u.forgot_password
+      @u.forgot_password
 
-      u.reset_password(Time.now).should == true
+      @u.reset_password(Time.now).should be_true
     end
 
     it 'should be able to be found with User.find_by_password_reset_code for 48 hours' do

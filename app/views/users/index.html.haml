@@ -6,11 +6,15 @@
     %td Email
     %td Roles
     %td Activated?
+    %td Suspended?
   - @users.each do |user|
     %tr
       %td= link_to user.login, edit_user_url(user)
       %td= user.email
-      %td= user.roles.map(&:name).join ', '
+      %td
+        = user.roles.map(&:name).join ', '
+        = link_to "(change)", roles_user_url(user)
       %td= !!user.activated_at
+      %td= user.suspended?
 
 %p= link_to "New User", new_user_url 

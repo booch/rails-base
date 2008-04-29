@@ -32,19 +32,26 @@ class UsersController < ApplicationController
     redirect_to :action => :edit
   end
 
-  def destroy
+  def suspend
+    #TODO: Add suspend column to user and implement this
   end
 
-  def suspend
+  def unsuspend
+    #TODO: Should this and suspend be dry'd up?
   end
 
   def roles
+    #TODO: Clean up view with helper
+    @user  = User.find params[:id]
+    @roles = Role.find :all
   end
 
-  def add_roles
+  def change_roles
     @user = User.find params[:id]
-    role = Role.find params[:roles][:id]
-    @user.roles << role
+    @user.roles = Role.find params[:user][:roles]
+    @user.save
+
+    redirect_to :action => :index
   end
 
   def remove_roles

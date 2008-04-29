@@ -11,8 +11,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users, :member => {
     :suspend => :put,
     :roles => :get,
-    :add_roles => :post,
-    :remove_roles => :delete
+    :change_roles => :put
   }
 
   # XXX: This is kind of kludgy. Other ideas?
