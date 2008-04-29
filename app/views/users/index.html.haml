@@ -7,6 +7,7 @@
     %td Roles
     %td Activated?
     %td Suspended?
+    %td
   - @users.each do |user|
     %tr
       %td= link_to user.login, edit_user_url(user)
@@ -15,6 +16,12 @@
         = user.roles.map(&:name).join ', '
         = link_to "(change)", roles_user_url(user)
       %td= !!user.activated_at
-      %td= user.suspended?
+      %td
+        = user.suspended?
+        - if user.suspended?
+          = link_to "(unsuspend)", unsuspend_user_url(user), :method => :put
+        - else
+          = link_to "(suspend)", suspend_user_url(user), :method => :put
+      %td= link_to "(reset password)", reset_password_user_url(user), :method => :put
 
 %p= link_to "New User", new_user_url 

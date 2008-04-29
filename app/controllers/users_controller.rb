@@ -33,11 +33,25 @@ class UsersController < ApplicationController
   end
 
   def suspend
-    #TODO: Add suspend column to user and implement this
+    @user = User.find params[:id]
+    @user.suspend!
+
+    redirect_to :action => :index
   end
 
+  #TODO: Should this and suspend be dry'd up?
   def unsuspend
-    #TODO: Should this and suspend be dry'd up?
+    @user = User.find params[:id]
+    @user.unsuspend!
+
+    redirect_to :action => :index
+  end
+
+  def reset_password
+    @user = User.find params[:id]
+    @user.forgot_password
+
+    redirect_to :action => :index
   end
 
   def roles

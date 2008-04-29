@@ -10,8 +10,10 @@ ActionController::Routing::Routes.draw do |map|
   # Made suspend a put, because it is basically an update call.
   map.resources :users, :member => {
     :suspend => :put,
+    :unsuspend => :put,
     :roles => :get,
-    :change_roles => :put
+    :change_roles => :put,
+    :reset_password => :put
   }
 
   # XXX: This is kind of kludgy. Other ideas?

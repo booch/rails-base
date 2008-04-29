@@ -1,0 +1,65 @@
+(in /Users/iamjwc/programming/craig/rails-base)
+
+SessionController
+- logins and redirects
+- fails login and does not redirect
+- logs out
+- remembers me
+- does not remember me
+- deletes token on logout
+- logs in with cookie
+- fails expired cookie login
+- fails cookie login
+- should fail login until account is activated
+- should redirect activated users to homepage when they log in
+
+UserController
+- allows signup
+- requires login on signup
+- requires password on signup
+- requires password confirmation on signup
+- requires email on signup
+- should allow a user that forgot their password to create a password_reset_code
+
+UserController without logging in
+- should not allow access to pages that need authentication
+- should allow access to public pages
+
+UserController after logging in
+- should allow a user with a recent password_reset_code to change their password if two matching passwords are supplied
+- should not allow a user with a recent password_reset_code to change their password if two different passwords are supplied
+- should allow a user to change their email address
+- should allow a user to change their password if they supplied two matching passwords
+- should not allow a user to change their password if they supplied two different passwords
+
+User
+- requires login
+- requires password
+- requires password confirmation
+- requires email
+- resets password
+- does not rehash password
+- authenticates user
+- sets remember token
+- unsets remember token
+- remembers me for one week
+- remembers me until one week
+- remembers me default two weeks
+
+User being created
+- increments User#count
+
+User that is suspended
+- should not be able to login
+
+User when first created
+- should not be able to login until gets activated
+- should have an activation code
+- should not have an activation time
+- should not have a password reset code or expiration time
+
+User that forgot password
+- should be able to generate a password reset code
+- should not be able to reset password if it is not done within 48 hours
+- should be able to reset password if it is done within 48 hours
+- should be able to be found with User.find_by_password_reset_code for 48 hours
