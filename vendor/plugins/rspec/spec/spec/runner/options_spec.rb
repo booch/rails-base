@@ -18,6 +18,76 @@ module Spec
           @options.examples.should == []
         end
       end
+      
+      describe "#include_pattern" do
+        it "should default to '**/*_spec.rb'" do
+          @options.filename_pattern.should == "**/*_spec.rb"
+        end
+      end
+      
+      describe "#files_to_load" do
+        
+        it "should load files not following pattern if named explicitly" do
+          file = File.expand_path(File.dirname(__FILE__) + "/resources/a_bar.rb")
+          @options.files << file
+          @options.files_to_load.should include(file)
+        end
+        
+        describe "with default --pattern" do
+          it "should load files named _spec.rb" do
+            dir = File.expand_path(File.dirname(__FILE__) + "/resources/")
+            @options.files << dir
+            @options.files_to_load.should == ["#{dir}/a_spec.rb"]
+          end
+        end
+        
+        describe "with explicit pattern (single)" do
+          before(:each) do
+            @options.filename_pattern = "**/*_foo.rb"
+          end
+        
+          it "should load files following pattern" do
+            file = File.expand_path(File.dirname(__FILE__) + "/resources/a_foo.rb")
+            @options.files << file
+            @options.files_to_load.should include(file)
+          end
+        
+          it "should load files in directories following pattern" do
+            dir = File.expand_path(File.dirname(__FILE__) + "/resources")
+            @options.files << dir
+            @options.files_to_load.should include("#{dir}/a_foo.rb")
+          end
+        
+          it "should not load files in directories not following pattern" do
+            dir = File.expand_path(File.dirname(__FILE__) + "/resources")
+            @options.files << dir
+            @options.files_to_load.should_not include("#{dir}/a_bar.rb")
+          end
+        end
+        
+        describe "with explicit pattern (comma,separated,values)" do
+          
+          before(:each) do
+            @options.filename_pattern = "**/*_foo.rb,**/*_bar.rb"
+          end
+
+          it "should support comma separated values" do
+            dir = File.expand_path(File.dirname(__FILE__) + "/resources")
+            @options.files << dir
+            @options.files_to_load.should include("#{dir}/a_foo.rb")
+            @options.files_to_load.should include("#{dir}/a_bar.rb")
+          end
+        
+          it "should support comma separated values with spaces" do
+            dir = File.expand_path(File.dirname(__FILE__) + "/resources")
+            @options.files << dir
+            @options.files_to_load.should include("#{dir}/a_foo.rb")
+            @options.files_to_load.should include("#{dir}/a_bar.rb")
+          end
+        
+        end
+      
+      end
 
       describe "#backtrace_tweaker" do
         it "should default to QuietBacktraceTweaker" do
@@ -253,7 +323,7 @@ module Spec
           @options.run_examples
         end
 
-        describe "#run_examples when there are example_group" do
+        describe "when there are examples" do
           before(:each) do
             @options.add_example_group Class.new(::Spec::Example::ExampleGroup)
             @options.formatters << Formatter::BaseTextFormatter.new(@options, @out)
@@ -269,9 +339,48 @@ module Spec
             @options.run_examples
             @options.examples_run?.should be_true
           end
+
+          describe "when using heckle runner" do
+            before(:each) do
+              @heckle_runner_mock = mock("HeckleRunner")
+              @options.heckle_runner = @heckle_runner_mock
+            end
+            
+            it "should heckle" do
+              @heckle_runner_mock.should_receive(:heckle_with)
+              @options.run_examples
+            end
+            
+            it "shouldn't heckle recursively" do
+              heckled = false
+              @heckle_runner_mock.should_receive(:heckle_with) {
+                heckled.should == false
+                heckled = true
+                @options.run_examples
+              }
+              @options.run_examples
+            end
+
+            it "shouldn't load spec files twice" do
+              example_runner = mock("ExampleGroupRunner")
+              example_runner_inside_heckle = mock("ExampleGroupRunner inside Heckle")
+
+              ExampleGroupRunner.should_receive(:new).twice.and_return(
+                example_runner, example_runner_inside_heckle
+              )
+
+              example_runner.stub!(:run)
+              example_runner.should_receive(:load_files)
+              @heckle_runner_mock.stub!(:heckle_with).and_return { @options.run_examples }
+              example_runner_inside_heckle.stub!(:run)
+              example_runner_inside_heckle.should_not_receive(:load_files)
+
+              @options.run_examples
+            end
+          end
         end
 
-        describe "#run_examples when there are no example_group" do
+        describe "when there are no examples" do
           before(:each) do
             @options.formatters << Formatter::BaseTextFormatter.new(@options, @out)
           end
