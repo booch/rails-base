@@ -1,5 +1,1 @@
 (in /Users/iamjwc/programming/craig/rails-base)
-app/controllers/users_controller.rb:
-  * [ 42] [TODO] Should this and suspend be dry'd up?
-  * [ 58] [TODO] Clean up view with helper
-

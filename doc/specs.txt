@@ -38,6 +38,9 @@ UsersController when logged in as an admin
 - should be able to suspend and unsuspend a user
 - should be able to send a user a password reset code
 
+UsersController when not logged in as an admin
+- should not allow access
+
 User
 - requires login
 - requires password

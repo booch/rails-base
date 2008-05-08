@@ -39,7 +39,6 @@ class UsersController < ApplicationController
     redirect_to :action => :index
   end
 
-  #TODO: Should this and suspend be dry'd up?
   def unsuspend
     @user = User.find params[:id]
     @user.unsuspend!
@@ -55,7 +54,6 @@ class UsersController < ApplicationController
   end
 
   def roles
-    #TODO: Clean up view with helper
     @user  = User.find params[:id]
     @roles = Role.find :all
   end
@@ -67,11 +65,4 @@ class UsersController < ApplicationController
 
     redirect_to :action => :index
   end
-
-  def remove_roles
-    @user = User.find params[:id]
-    role = Role.find params[:roles][:id]
-    @user.roles.delete role
-  end
-
 end

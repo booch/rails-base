@@ -50,6 +50,23 @@ describe UsersController do
       user.password_reset_code.should_not be_nil
     end
   end
+
+  describe 'when not logged in as an admin' do
+    it 'should not allow access' do
+      get :index;   response.should be_redirect
+      get :show;    response.should be_redirect
+      get :edit;    response.should be_redirect
+      get :new;     response.should be_redirect
+      post :create; response.should be_redirect
+      put  :update; response.should be_redirect
+
+      put :suspend;        response.should be_redirect
+      put :unsuspend;      response.should be_redirect
+      get :roles;          response.should be_redirect
+      put :change_roles;   response.should be_redirect
+      put :reset_password; response.should be_redirect
+    end
+  end
   
   def create_user(options = {})
     post :create, :user => { :login => 'quire', :email => 'quire@example.com',
