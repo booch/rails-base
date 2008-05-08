@@ -532,9 +532,9 @@ module ActionController #:nodoc:
 
       # Returns a URL that has been rewritten according to the options hash and the defined Routes.
       # (For doing a complete redirect, use redirect_to).
-      #  
+      #
       # <tt>url_for</tt> is used to:
-      #  
+      #
       # All keys given to url_for are forwarded to the Route module, save for the following:
       # * <tt>:anchor</tt> -- specifies the anchor name to be appended to the path. For example,
       #   <tt>url_for :controller => 'posts', :action => 'show', :id => 10, :anchor => 'comments'</tt>
@@ -998,7 +998,7 @@ module ActionController #:nodoc:
       # As you can infer from the example, this is mostly useful for situations where you want to centralize dynamic decisions about the
       # urls as they stem from the business domain. Please note that any individual url_for call can always override the defaults set
       # by this method.
-      def default_url_options(options) #:doc:
+      def default_url_options(options = nil)
       end
 
       # Redirects the browser to the target specified in +options+. This parameter can take one of three forms:
