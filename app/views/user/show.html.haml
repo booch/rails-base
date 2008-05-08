@@ -1,3 +1,14 @@
 
-= link_to @user.login, :controller => 'user', :action => 'edit'
+%h1= @user.login
+
+%table
+  %tr
+    %td Email
+    %td= @user.email
+  %tr
+    %td Last Login
+    %td= @user.last_login_at
+
+
+= link_to "Edit", :controller => 'user', :action => 'edit'
 

@@ -1,12 +1,22 @@
 !!!
 %html
   %head
+    = stylesheet_link_tag "main"
   %body
-    - if flash[:notice]
-      #notice
-        = "Notice: #{flash[:notice]}"
-    - if flash[:error]
-      #error
-        = "Error: #{flash[:error]}"
-    = yield :layout
+    %div#page
+      %ul#nav
+        %li= link_to "Home", "/"
+        %li= link_to "Users", users_url
+        - if current_user.nil?
+          %li= link_to "Login", login_url
+        - else
+          %li= link_to "Account", "/user" 
+          %li= link_to "Logout", logout_url
+
+      - if flash[:notice]
+        #notice= "Notice: #{flash[:notice]}"
+      - if flash[:error]
+        #error= "Error: #{flash[:error]}"
+
+      = yield :layout
 

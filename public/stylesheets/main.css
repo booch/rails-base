@@ -1,0 +1,35 @@
+
+body {
+  font-size: 62.5%;
+  font-size: 1.0em;
+}
+
+div#page {
+  background-color: #eee;
+  width: 80%;
+  margin: 1em auto;
+  padding: 1em;
+  padding-top: 0;
+}
+
+ul#nav {
+  padding: 0;
+  margin: 0;
+  margin-left: 1em;
+}
+
+ul#nav li {
+  display: inline;
+}
+
+ul#nav li a {
+  padding: 7px 10px;
+  background-color: #80b9f2;
+  color: #fff;
+  text-decoration: none;
+}
+
+ul#nav li a:hover {
+  background-color: #68ace3;
+}
+
