@@ -33,3 +33,6 @@ ul#nav li a:hover {
   background-color: #68ace3;
 }
 
+form p label {
+  display: block;
+}
