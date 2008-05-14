@@ -24,8 +24,8 @@ ActionController::Routing::Routes.draw do |map|
   # XXX: Not sure if we actually HAVE to have 'user/login' or if
   # 'sessions/new' will suffice, but this will make the acceptance
   # test pass.
-  map.login  'user/login',  :controller => 'session', :action => :new
-  map.logout 'user/logout', :controller => 'session', :action => :logout
+  map.login  'session/login',  :controller => 'session', :action => :new
+  map.logout 'session/logout', :controller => 'session', :action => :logout
 
   # XXX: Can take this out later
   map.index '/', :controller => 'index', :action => :index

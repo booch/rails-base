@@ -32,6 +32,15 @@ UserController after logging in
 - should allow a user to change their password if they supplied two matching passwords
 - should not allow a user to change their password if they supplied two different passwords
 
+UsersController when logged in as an admin
+- should display a list of the users
+- should be able to create new users
+- should be able to suspend and unsuspend a user
+- should be able to send a user a password reset code
+
+UsersController when not logged in as an admin
+- should not allow access
+
 User
 - requires login
 - requires password

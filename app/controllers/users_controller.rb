@@ -16,7 +16,12 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(params[:user])
-    @user.save
+
+    if @user.save
+      flash[:notice] = "User '#{@user.login}' created."
+    else
+      flash[:error] = "User '#{@user.login}' could not be created."
+    end
 
     redirect_to :action => :index
   end
@@ -27,35 +32,54 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find params[:id]
-    @user.update_attributes(params[:user])
 
-    redirect_to :action => :edit
-  end
-
-  def suspend
-    @user = User.find params[:id]
-    @user.suspend!
+    if @user.update_attributes(params[:user])
+      flash[:notice] = "User '#{@user.login}' updated."
+    else
+      flash[:error] = "User '#{@user.login}' could not be updated."
+    end
 
     redirect_to :action => :index
   end
 
-  #TODO: Should this and suspend be dry'd up?
+  def suspend
+    @user = User.find params[:id]
+    
+    if @user.suspend!
+      flash[:notice] = "User '#{@user.login}' suspended."
+    else
+      flash[:error] = "User '#{@user.login}' could not be suspended."
+    end
+
+    redirect_to :action => :index
+  end
+
   def unsuspend
     @user = User.find params[:id]
-    @user.unsuspend!
+
+    if @user.unsuspend!
+      flash[:notice] = "User '#{@user.login}' unsuspended."
+    else
+      flash[:error] = "User '#{@user.login}' could not be unsuspended."
+    end
 
     redirect_to :action => :index
   end
 
   def reset_password
     @user = User.find params[:id]
-    @user.forgot_password
+
+    if @user.forgot_password
+      flash[:notice] = "User '#{@user.login}' password has been reset."
+    else
+      flash[:error] = "User '#{@user.login}' password could not be reset."
+    end
+
 
     redirect_to :action => :index
   end
 
   def roles
-    #TODO: Clean up view with helper
     @user  = User.find params[:id]
     @roles = Role.find :all
   end
@@ -63,15 +87,13 @@ class UsersController < ApplicationController
   def change_roles
     @user = User.find params[:id]
     @user.roles = Role.find params[:user][:roles]
-    @user.save
+
+    if @user.save
+      flash[:notice] = "Roles of user '#{@user.login}' are now '#{@user.roles.map(&:name).join(', ')}'."
+    else
+      flash[:error] = "Roles of user '#{@user.login}' could not be updated."
+    end
 
     redirect_to :action => :index
   end
-
-  def remove_roles
-    @user = User.find params[:id]
-    role = Role.find params[:roles][:id]
-    @user.roles.delete role
-  end
-
 end

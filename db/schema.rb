@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 5) do
+ActiveRecord::Schema.define(:version => 20080508031419) do
 
   create_table "roles", :force => true do |t|
     t.string "name"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(:version => 5) do
     t.string   "password_reset_code",            :limit => 40
     t.datetime "password_reset_code_expires_at"
     t.boolean  "suspended"
+    t.datetime "last_login_at"
   end
 
 end
