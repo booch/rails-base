@@ -5,3 +5,4 @@
 *.session
 previous_failures.txt
 *.swp
+db/schema.rb
