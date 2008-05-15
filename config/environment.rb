@@ -13,7 +13,7 @@ require File.join(File.dirname(__FILE__), 'boot')
 HOST = "http://localhost:3000/"
 
 Rails::Initializer.run do |config|
-  config.gem 'haml', :version => '>= 1.9.0'
+#  config.gem 'haml', :version => '>= 1.9.0'
 
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
