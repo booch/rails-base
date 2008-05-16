@@ -46,6 +46,8 @@ module Spec
         :user_input_for_runner,
         :error_stream,
         :output_stream,
+        :before_suite_parts,
+        :after_suite_parts,
         # TODO: BT - Figure out a better name
         :argv
       )
@@ -65,9 +67,12 @@ module Spec
         @diff_format  = :unified
         @files = []
         @example_groups = []
+        @result = nil
         @examples_run = false
         @examples_should_be_run = nil
         @user_input_for_runner = nil
+        @before_suite_parts = []
+        @after_suite_parts = []
       end
 
       def add_example_group(example_group)
@@ -80,21 +85,31 @@ module Spec
 
       def run_examples
         return true unless examples_should_be_run?
-        runner = custom_runner || ExampleGroupRunner.new(self)
+        success = true
+        begin
+          before_suite_parts.each do |part|
+            part.call
+          end
+          runner = custom_runner || ExampleGroupRunner.new(self)
 
-        unless @files_loaded
-          runner.load_files(files_to_load)
-          @files_loaded = true
-        end
+          unless @files_loaded
+            runner.load_files(files_to_load)
+            @files_loaded = true
+          end
 
-        if example_groups.empty?
-          true
-        else
-          set_spec_from_line_number if line_number
-          success = runner.run
-          @examples_run = true
-          heckle if heckle_runner
-          success
+          if example_groups.empty?
+            true
+          else
+            set_spec_from_line_number if line_number
+            success = runner.run
+            @examples_run = true
+            heckle if heckle_runner
+            success
+          end
+        ensure
+          after_suite_parts.each do |part|
+            part.call(success)
+          end
         end
       end
 
