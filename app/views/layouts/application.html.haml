@@ -1,7 +1,10 @@
 !!!
 %html
   %head
+    %title
+      = yield(:title) || 'Rails App'
     = stylesheet_link_tag "main"
+    = yield(:head)
   %body
     %div#page
       %ul#nav
