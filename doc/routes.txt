@@ -1,66 +1,66 @@
 (in /Users/iamjwc/programming/craig/rails-base)
-                                          POST   /user                                    {:controller=>"user", :action=>"create"}
-                                          POST   /user.:format                            {:controller=>"user", :action=>"create"}
-                                          GET    /user/new                                {:controller=>"user", :action=>"new"}
-                                          GET    /user/new.:format                        {:controller=>"user", :action=>"new"}
-           change_forgotten_password_user POST   /user/change_forgotten_password          {:controller=>"user", :action=>"change_forgotten_password"}
- formatted_change_forgotten_password_user POST   /user/change_forgotten_password.:format  {:controller=>"user", :action=>"change_forgotten_password"}
-          create_password_reset_code_user POST   /user/create_password_reset_code         {:controller=>"user", :action=>"create_password_reset_code"}
-formatted_create_password_reset_code_user POST   /user/create_password_reset_code.:format {:controller=>"user", :action=>"create_password_reset_code"}
-                                          GET    /user/edit                               {:controller=>"user", :action=>"edit"}
-                                          GET    /user/edit.:format                       {:controller=>"user", :action=>"edit"}
-                            activate_user GET    /user/activate                           {:controller=>"user", :action=>"activate"}
-                  formatted_activate_user GET    /user/activate.:format                   {:controller=>"user", :action=>"activate"}
-                                          GET    /user/reset_password                     {:controller=>"user", :action=>"reset_password"}
-                                          GET    /user/reset_password.:format             {:controller=>"user", :action=>"reset_password"}
-                     forgot_password_user GET    /user/forgot_password                    {:controller=>"user", :action=>"forgot_password"}
-           formatted_forgot_password_user GET    /user/forgot_password.:format            {:controller=>"user", :action=>"forgot_password"}
-                                          GET    /user                                    {:controller=>"user", :action=>"show"}
-                                          GET    /user.:format                            {:controller=>"user", :action=>"show"}
-                                          PUT    /user                                    {:controller=>"user", :action=>"update"}
-                                          PUT    /user.:format                            {:controller=>"user", :action=>"update"}
-                                          DELETE /user                                    {:controller=>"user", :action=>"destroy"}
-                                          DELETE /user.:format                            {:controller=>"user", :action=>"destroy"}
-                                    users GET    /users                                   {:controller=>"users", :action=>"index"}
-                          formatted_users GET    /users.:format                           {:controller=>"users", :action=>"index"}
-                                          POST   /users                                   {:controller=>"users", :action=>"create"}
-                                          POST   /users.:format                           {:controller=>"users", :action=>"create"}
-                                 new_user GET    /users/new                               {:controller=>"users", :action=>"new"}
-                       formatted_new_user GET    /users/new.:format                       {:controller=>"users", :action=>"new"}
-                      reset_password_user PUT    /users/:id/reset_password                {:controller=>"users", :action=>"reset_password"}
-            formatted_reset_password_user PUT    /users/:id/reset_password.:format        {:controller=>"users", :action=>"reset_password"}
-                             suspend_user PUT    /users/:id/suspend                       {:controller=>"users", :action=>"suspend"}
-                   formatted_suspend_user PUT    /users/:id/suspend.:format               {:controller=>"users", :action=>"suspend"}
-                           unsuspend_user PUT    /users/:id/unsuspend                     {:controller=>"users", :action=>"unsuspend"}
-                 formatted_unsuspend_user PUT    /users/:id/unsuspend.:format             {:controller=>"users", :action=>"unsuspend"}
-                        change_roles_user PUT    /users/:id/change_roles                  {:controller=>"users", :action=>"change_roles"}
-              formatted_change_roles_user PUT    /users/:id/change_roles.:format          {:controller=>"users", :action=>"change_roles"}
-                                edit_user GET    /users/:id/edit                          {:controller=>"users", :action=>"edit"}
-                      formatted_edit_user GET    /users/:id/edit.:format                  {:controller=>"users", :action=>"edit"}
-                               roles_user GET    /users/:id/roles                         {:controller=>"users", :action=>"roles"}
-                     formatted_roles_user GET    /users/:id/roles.:format                 {:controller=>"users", :action=>"roles"}
-                                     user GET    /users/:id                               {:controller=>"users", :action=>"show"}
-                           formatted_user GET    /users/:id.:format                       {:controller=>"users", :action=>"show"}
-                                          PUT    /users/:id                               {:controller=>"users", :action=>"update"}
-                                          PUT    /users/:id.:format                       {:controller=>"users", :action=>"update"}
-                                          DELETE /users/:id                               {:controller=>"users", :action=>"destroy"}
-                                          DELETE /users/:id.:format                       {:controller=>"users", :action=>"destroy"}
-                                          POST   /session                                 {:controller=>"session", :action=>"create"}
-                                          POST   /session.:format                         {:controller=>"session", :action=>"create"}
-                              new_session GET    /session/new                             {:controller=>"session", :action=>"new"}
-                    formatted_new_session GET    /session/new.:format                     {:controller=>"session", :action=>"new"}
-                             edit_session GET    /session/edit                            {:controller=>"session", :action=>"edit"}
-                   formatted_edit_session GET    /session/edit.:format                    {:controller=>"session", :action=>"edit"}
-                           logout_session GET    /session/logout                          {:controller=>"session", :action=>"logout"}
-                 formatted_logout_session GET    /session/logout.:format                  {:controller=>"session", :action=>"logout"}
-                                  session GET    /session                                 {:controller=>"session", :action=>"show"}
-                        formatted_session GET    /session.:format                         {:controller=>"session", :action=>"show"}
-                                          PUT    /session                                 {:controller=>"session", :action=>"update"}
-                                          PUT    /session.:format                         {:controller=>"session", :action=>"update"}
-                                          DELETE /session                                 {:controller=>"session", :action=>"destroy"}
-                                          DELETE /session.:format                         {:controller=>"session", :action=>"destroy"}
-                                    login        /session/login                           {:controller=>"session", :action=>:new}
-                                   logout        /session/logout                          {:controller=>"session", :action=>:logout}
-                                    index        /                                        {:controller=>"index", :action=>:index}
+                                          POST   /user                                    {:action=>"create", :controller=>"user"}
+                                          POST   /user.:format                            {:action=>"create", :controller=>"user"}
+                                          GET    /user/new                                {:action=>"new", :controller=>"user"}
+                                          GET    /user/new.:format                        {:action=>"new", :controller=>"user"}
+          create_password_reset_code_user POST   /user/create_password_reset_code         {:action=>"create_password_reset_code", :controller=>"user"}
+formatted_create_password_reset_code_user POST   /user/create_password_reset_code.:format {:action=>"create_password_reset_code", :controller=>"user"}
+           change_forgotten_password_user POST   /user/change_forgotten_password          {:action=>"change_forgotten_password", :controller=>"user"}
+ formatted_change_forgotten_password_user POST   /user/change_forgotten_password.:format  {:action=>"change_forgotten_password", :controller=>"user"}
+                                          GET    /user/edit                               {:action=>"edit", :controller=>"user"}
+                                          GET    /user/edit.:format                       {:action=>"edit", :controller=>"user"}
+                     forgot_password_user GET    /user/forgot_password                    {:action=>"forgot_password", :controller=>"user"}
+           formatted_forgot_password_user GET    /user/forgot_password.:format            {:action=>"forgot_password", :controller=>"user"}
+                            activate_user GET    /user/activate                           {:action=>"activate", :controller=>"user"}
+                  formatted_activate_user GET    /user/activate.:format                   {:action=>"activate", :controller=>"user"}
+                                          GET    /user/reset_password                     {:action=>"reset_password", :controller=>"user"}
+                                          GET    /user/reset_password.:format             {:action=>"reset_password", :controller=>"user"}
+                                          GET    /user                                    {:action=>"show", :controller=>"user"}
+                                          GET    /user.:format                            {:action=>"show", :controller=>"user"}
+                                          PUT    /user                                    {:action=>"update", :controller=>"user"}
+                                          PUT    /user.:format                            {:action=>"update", :controller=>"user"}
+                                          DELETE /user                                    {:action=>"destroy", :controller=>"user"}
+                                          DELETE /user.:format                            {:action=>"destroy", :controller=>"user"}
+                                    users GET    /users                                   {:action=>"index", :controller=>"users"}
+                          formatted_users GET    /users.:format                           {:action=>"index", :controller=>"users"}
+                                          POST   /users                                   {:action=>"create", :controller=>"users"}
+                                          POST   /users.:format                           {:action=>"create", :controller=>"users"}
+                                 new_user GET    /users/new                               {:action=>"new", :controller=>"users"}
+                       formatted_new_user GET    /users/new.:format                       {:action=>"new", :controller=>"users"}
+                      reset_password_user PUT    /users/:id/reset_password                {:action=>"reset_password", :controller=>"users"}
+            formatted_reset_password_user PUT    /users/:id/reset_password.:format        {:action=>"reset_password", :controller=>"users"}
+                             suspend_user PUT    /users/:id/suspend                       {:action=>"suspend", :controller=>"users"}
+                   formatted_suspend_user PUT    /users/:id/suspend.:format               {:action=>"suspend", :controller=>"users"}
+                           unsuspend_user PUT    /users/:id/unsuspend                     {:action=>"unsuspend", :controller=>"users"}
+                 formatted_unsuspend_user PUT    /users/:id/unsuspend.:format             {:action=>"unsuspend", :controller=>"users"}
+                        change_roles_user PUT    /users/:id/change_roles                  {:action=>"change_roles", :controller=>"users"}
+              formatted_change_roles_user PUT    /users/:id/change_roles.:format          {:action=>"change_roles", :controller=>"users"}
+                                edit_user GET    /users/:id/edit                          {:action=>"edit", :controller=>"users"}
+                      formatted_edit_user GET    /users/:id/edit.:format                  {:action=>"edit", :controller=>"users"}
+                               roles_user GET    /users/:id/roles                         {:action=>"roles", :controller=>"users"}
+                     formatted_roles_user GET    /users/:id/roles.:format                 {:action=>"roles", :controller=>"users"}
+                                     user GET    /users/:id                               {:action=>"show", :controller=>"users"}
+                           formatted_user GET    /users/:id.:format                       {:action=>"show", :controller=>"users"}
+                                          PUT    /users/:id                               {:action=>"update", :controller=>"users"}
+                                          PUT    /users/:id.:format                       {:action=>"update", :controller=>"users"}
+                                          DELETE /users/:id                               {:action=>"destroy", :controller=>"users"}
+                                          DELETE /users/:id.:format                       {:action=>"destroy", :controller=>"users"}
+                                          POST   /session                                 {:action=>"create", :controller=>"session"}
+                                          POST   /session.:format                         {:action=>"create", :controller=>"session"}
+                              new_session GET    /session/new                             {:action=>"new", :controller=>"session"}
+                    formatted_new_session GET    /session/new.:format                     {:action=>"new", :controller=>"session"}
+                             edit_session GET    /session/edit                            {:action=>"edit", :controller=>"session"}
+                   formatted_edit_session GET    /session/edit.:format                    {:action=>"edit", :controller=>"session"}
+                           logout_session GET    /session/logout                          {:action=>"logout", :controller=>"session"}
+                 formatted_logout_session GET    /session/logout.:format                  {:action=>"logout", :controller=>"session"}
+                                  session GET    /session                                 {:action=>"show", :controller=>"session"}
+                        formatted_session GET    /session.:format                         {:action=>"show", :controller=>"session"}
+                                          PUT    /session                                 {:action=>"update", :controller=>"session"}
+                                          PUT    /session.:format                         {:action=>"update", :controller=>"session"}
+                                          DELETE /session                                 {:action=>"destroy", :controller=>"session"}
+                                          DELETE /session.:format                         {:action=>"destroy", :controller=>"session"}
+                                    login        /session/login                           {:action=>:new, :controller=>"session"}
+                                   logout        /session/logout                          {:action=>:logout, :controller=>"session"}
+                                    index        /                                        {:action=>:index, :controller=>"index"}
                                                  /:controller/:action/:id                 
                                                  /:controller/:action/:id.:format         
