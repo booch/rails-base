@@ -1,4 +1,9 @@
 ActionController::Routing::Routes.draw do |map|
+  # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
+  map.root :controller => 'index', :action => :index
+  # Home page (alias of root)
+  map.home '/', :controller => 'index', :action => :index
+
   map.resource :user, :controller => 'user', :member => {
     :activate => :get,
     :forgot_password => :get,
@@ -27,9 +32,6 @@ ActionController::Routing::Routes.draw do |map|
   map.login  'session/login',  :controller => 'session', :action => :new
   map.logout 'session/logout', :controller => 'session', :action => :logout
 
-  # XXX: Can take this out later
-  map.index '/', :controller => 'index', :action => :index
-
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
@@ -54,9 +56,6 @@ ActionController::Routing::Routes.draw do |map|
   #     # Directs /admin/products/* to Admin::ProductsController (app/controllers/admin/products_controller.rb)
   #     admin.resources :products
   #   end
-
-  # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
-  # map.root :controller => "welcome"
 
   # See how all your routes lay out with "rake routes"
 
