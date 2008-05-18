@@ -76,6 +76,10 @@ class User < ActiveRecord::Base
     self.save(false)
   end
 
+  def activated?
+    !!activated_at
+  end
+
   # Returns true if the user has just been activated.
   def recently_activated?
     @activated

@@ -15,7 +15,12 @@ class SessionController < ApplicationController
       redirect_back_or_default('/')
       flash[:notice] = "Logged in successfully"
     else
-      flash[:error] = "Incorrect username or password"
+      invalid_user = User.find(:first, :conditions => {:login => params[:login]})
+      if invalid_user && !invalid_user.activated?
+        flash[:error] = "Account has not been activated"
+      else
+        flash[:error] = "Incorrect username or password"
+      end
       render :action => 'new'
     end
   end

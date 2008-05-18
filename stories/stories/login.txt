@@ -54,5 +54,5 @@ When I visit '/session/login'
   And click on the 'Log in' button
 Then I should NOT be authenticated
   And I should end up at the login page
-  #And the flash should say 'account has not been activated'
+  And the flash should say 'account has not been activated'
 

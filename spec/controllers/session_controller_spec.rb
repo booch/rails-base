@@ -19,6 +19,19 @@ describe SessionController do
     response.should be_success
   end
 
+  it 'should fail login and not redirect if user account is suspended' do
+    post :create, :login => 'suspended', :password => 'test'
+    session[:user_id].should be_nil
+    response.should be_success
+  end
+
+  it 'should fail login and not redirect if user account has not been activated' do
+    post :create, :login => 'unactivated', :password => 'test'
+    session[:user_id].should be_nil
+    response.should be_success
+  end
+
+
   it 'logs out' do
     post :create, :login => 'quentin', :password => 'test'
     get :destroy
