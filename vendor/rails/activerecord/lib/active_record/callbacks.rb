@@ -161,7 +161,7 @@ module ActiveRecord
   # == <tt>before_validation*</tt> returning statements
   #
   # If the returning value of a +before_validation+ callback can be evaluated to +false+, the process will be aborted and <tt>Base#save</tt> will return +false+.
-  # If <tt>Base#save!</tt> is called it will raise a +RecordNotSaved+ exception.
+  # If Base#save! is called it will raise a RecordNotSaved exception.
   # Nothing will be appended to the errors object.
   #
   # == Canceling callbacks
@@ -293,13 +293,13 @@ module ActiveRecord
 
     private
       def callback(method)
-        notify(method)
-
         result = run_callbacks(method) { |result, object| result == false }
 
         if result != false && respond_to_without_attributes?(method)
           result = send(method)
         end
+
+        notify(method)
 
         return result
       end

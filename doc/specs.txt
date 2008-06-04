@@ -3,6 +3,8 @@
 SessionController
 - logins and redirects
 - fails login and does not redirect
+- should fail login and not redirect if user account is suspended
+- should fail login and not redirect if user account has not been activated
 - logs out
 - remembers me
 - does not remember me

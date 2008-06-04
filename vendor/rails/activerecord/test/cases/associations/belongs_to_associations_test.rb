@@ -54,8 +54,8 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
     original_proxy = citibank.firm
     citibank.firm = another_firm
 
-    assert_equal first_firm.object_id, original_proxy.object_id
-    assert_equal another_firm.object_id, citibank.firm.object_id
+    assert_equal first_firm.object_id, original_proxy.target.object_id
+    assert_equal another_firm.object_id, citibank.firm.target.object_id
   end
 
   def test_creating_the_belonging_object
@@ -90,6 +90,11 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
   def test_with_condition
     assert_equal Company.find(1).name, Company.find(3).firm_with_condition.name
     assert_not_nil Company.find(3).firm_with_condition, "Microsoft should have a firm"
+  end
+
+  def test_with_select
+    assert_equal Company.find(2).firm_with_select.attributes.size, 1
+    assert_equal Company.find(2, :include => :firm_with_select ).firm_with_select.attributes.size, 1
   end
 
   def test_belongs_to_counter
