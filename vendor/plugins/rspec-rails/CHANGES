@@ -1,3 +1,8 @@
+== Version 1.1.5
+
+* Add conditional so Rails 2.1.0 doesn't warn about cache_template_extensions (patch from James Herdman)
+* Fixed stub_model examples to work with Rails 2.1.0 (the code was fine, just the spec needed patching)
+
 == Version 1.1.4
 
 Maintenance release.
@@ -18,3 +23,4 @@ Maintenance release.
 * Applied patch from Wincent Colaiuta to invert sense of "spec --diff". Closes #281.
 * Allow any type of render in view specs. Closes #57.
 * Applied patch from Ian White to get rspec working with edge rails (8804). Closes #271.
+* Applied patch from Jon Strother to have spec_server reload fixtures. Closes #344.

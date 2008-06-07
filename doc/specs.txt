@@ -1,5 +1,17 @@
 (in /Users/iamjwc/programming/craig/rails-base)
 
+Spec::Rails::Example::RailsExampleGroup
+
+Spec::Rails::Example::ModelExampleGroup
+
+Spec::Rails::Example::FunctionalExampleGroup
+
+Spec::Rails::Example::ControllerExampleGroup
+
+Spec::Rails::Example::HelperExampleGroup
+
+Spec::Rails::Example::ViewExampleGroup
+
 SessionController
 - logins and redirects
 - fails login and does not redirect
@@ -33,6 +45,8 @@ UserController after logging in
 - should allow a user to change their email address
 - should allow a user to change their password if they supplied two matching passwords
 - should not allow a user to change their password if they supplied two different passwords
+
+UsersController
 
 UsersController when logged in as an admin
 - should display a list of the users
