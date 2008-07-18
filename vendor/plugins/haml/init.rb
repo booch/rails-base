@@ -1,6 +1,8 @@
+require 'rubygems'
 begin
-  require 'haml'
-  Haml.init_rails(binding)
+  require File.join(File.dirname(__FILE__), 'lib', 'haml') # From here
 rescue LoadError
-  puts 'HAML gem not installed. Please install it.'
-end 
+  require 'haml' # From gem
+end
+
+Haml.init_rails(binding)
