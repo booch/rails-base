@@ -1,9 +1,7 @@
 steps_for(:webrat) do
 
 
-
-
-  When "(I )?click on the '$link'" do |link|
+  When "I click on the '$link' link" do |link|
     clicks_link link
   end
 

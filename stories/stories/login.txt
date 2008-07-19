@@ -6,6 +6,7 @@ So that I can use all the features of the site.
 
 
 Scenario: Valid username/password
+
 Given I am logged out
   And the 'test' user exists
   And has a password of 'test'
@@ -17,8 +18,11 @@ When I visit '/session/login'
 Then I should be authenticated
   And I should end up at the home page
   And the flash should say 'logged in'
+  And my account should have a recent last_login_at timestamp
+
 
 Scenario: Invalid username
+
 Given I am logged out
   And the 'invalid username' user does not exist
 When I visit '/session/login'
@@ -29,7 +33,9 @@ Then I should NOT be authenticated
   And I should end up at the login page
   And the flash should say 'incorrect username or password'
 
+
 Scenario: Invalid password
+
 Given I am logged out
   And the 'test' user exists
   And has a password of 'test'
@@ -44,6 +50,7 @@ Then I should NOT be authenticated
 
 
 Scenario: Account has not been activated
+
 Given I am logged out
   And the 'test' user exists
   And has a password of 'test'
@@ -55,4 +62,13 @@ When I visit '/session/login'
 Then I should NOT be authenticated
   And I should end up at the login page
   And the flash should say 'account has not been activated'
+
+
+Scenario: Logging out
+
+Given I am logged in as 'client'
+When I visit '/session/logout'
+Then I should be logged out
+  And I should end up at the login page
+  And the flash should say 'logged out'
 

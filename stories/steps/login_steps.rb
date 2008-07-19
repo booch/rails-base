@@ -1,3 +1,19 @@
+module InstanceVariableHelpers
+  def set_ivar(type, name, obj)
+    instance_variable_set ivar_name(type, name), obj
+  end
+  def get_ivar(type, name)
+    returning instance_variable_get(ivar_name(type, name)) do |obj|
+      yield obj if block_given?
+    end
+  end
+  private
+  def ivar_name(type, name)
+    "@#{type}_#{name.gsub(/[ -]/,'_').gsub('&','and')}"
+  end
+end
+include InstanceVariableHelpers
+
 module Spec
   module Rails
     module Matchers
@@ -33,6 +49,16 @@ end
 
 steps_for(:login) do
 
+  Given "I am logged in as '$username'" do |username|
+    @user = User.find(:first, :conditions => {:login => username}) ||
+            User.create!(:login => username, :email => 'test@example.com',
+                         :password => 'password', :password_confirmation => 'password')
+    visits '/session/login'
+    fills_in :login, :with => username
+    fills_in :password, :with => 'password'
+    clicks_button
+  end
+
   Given "the '$username' user exists" do |username|
     @user = User.find(:first, :conditions => {:login => username}) ||
             User.create!(:login => username, :email => 'test@example.com',
@@ -53,8 +79,9 @@ steps_for(:login) do
     @user.save!
   end
 
-  Then "the flash should say '$text'" do |text|
-      response.should have_text(/#{text}/i)
+  Given "has $number failed login attempts" do |number|
+    @user.failed_attempts = number
+    @user.save!
   end
 
   Given "has a password of '$password'" do |password|
@@ -63,9 +90,13 @@ steps_for(:login) do
     @user.save!
   end
 
+  Then "the flash should say '$text'" do |text|
+    response.should have_text(/#{text}/i)
+  end
+
   Then "I should be authenticated" do
     session[:user_id].should_not be_nil
-    session[:user_id].should be_an(Integer) # NOTE: Might actually be a String, due to the way sessions are handled.
+    session[:user_id].should be_an(Integer)
     user = User.find(session[:user_id])
     user.login.should == @user.login
   end
@@ -74,4 +105,18 @@ steps_for(:login) do
     session[:user_id].should be_nil
   end
   
+  Then "I should be logged out" do
+    session[:user_id].should be_nil
+  end
+
+  Then "my account should have a recent last_login_at timestamp" do
+    user = User.find(session[:user_id])
+    (Time.now - user.last_login_at).should < 2 # Allow 2 seconds
+  end
+
+  Then "the '$username' account should be locked" do |username|
+    User.find_by_login(username).should be_suspended
+  end
+
+
 end
