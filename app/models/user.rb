@@ -157,7 +157,7 @@ class User < ActiveRecord::Base
   end
     
   def password_required?
-    crypted_password.blank? || !password.blank?
+    crypted_password.blank? || !password.blank? || self.new_record?
   end
     
     

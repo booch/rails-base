@@ -121,23 +121,23 @@ describe User do
     end
 
     it 'should not be able to login until gets activated' do
-      User.authenticate('quire', 'quire').should == nil
+      User.authenticate('quire', 'quire').should be_nil
 
       @u.activate!
-      User.authenticate('quire', 'quire').should_not == nil
+      User.authenticate('quire', 'quire').should_not be_nil
     end
 
     it 'should have an activation code' do
-      @u.activation_code.should_not == nil
+      @u.activation_code.should_not be_nil
     end
 
     it 'should not have an activation time' do
-      @u.activated_at.should == nil
+      @u.activated_at.should be_nil
     end
 
     it 'should not have a password reset code or expiration time' do
-      @u.password_reset_code.should == nil
-      @u.password_reset_code_expires_at.should == nil
+      @u.password_reset_code.should be_nil
+      @u.password_reset_code_expires_at.should be_nil
     end
   end
 
