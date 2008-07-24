@@ -1,6 +1,6 @@
 require 'rake'
 
-namespace :rails do
+namespace :app do
   desc 'Set project name in database names and session_key; specify NAME, or default to enclosing dir name.'
   task :rename do
     PROJECT = ENV['NAME'] || File.basename(Dir.pwd)
